@@ -15,6 +15,12 @@ globalReplacements:
   - key: R_CORE_POOL_CIDR
     type: String
     value: 192.168.0.0/18
+    
+  - key: ALLOWED_REGIONS
+    type: StringList
+    value:
+      -  eu-west-1
+
 # --------------------------- NO NEED TO CHANGE BELOW THIS LINE ----------------------#
   - key: NO_SANDBOX_OUS
     type: StringList
