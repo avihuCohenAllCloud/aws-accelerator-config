@@ -15,21 +15,21 @@ mandatoryAccounts:
     organizationalUnit: Root
   - name: LogArchive
     description: The log archive account. Do not change the name field for this mandatory account. Note, the account name key does not need to match the AWS account name.
-    email: avihu.cohen+logtsmb@allcloud.io
+    email: avihu.cohen+logtsmb1@allcloud.io
     organizationalUnit: Security
   - name: Audit
     description: The security audit account (also referred to as the audit account). Do not change the name field for this mandatory account. Note, the account name key does not need to match the AWS account name.
-    email: avihu.cohen+audittsmb@allcloud.io
+    email: avihu.cohen+audittsmb1@allcloud.io
     organizationalUnit: Security
 workloadAccounts:
   # This account holds all services that need to be shared among all workloads
   - name: SharedServices
     description: The SharedServices account
-    email: avihu.cohen+sharedtsmb@allcloud.io
+    email: avihu.cohen+sharedtsmb1@allcloud.io
     organizationalUnit: Shared-Services
   # This account will manage the network resources for the organization  
   - name: Network
     description: The Network account
-    email: avihu.cohen+netsmb@allcloud.io
+    email: avihu.cohen+netsmb1@allcloud.io
     organizationalUnit: Network
     
