@@ -1,0 +1,105 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "denyKMSKeyDeletion",
+        "Effect": "Deny",
+        "Action": [
+          "kms:Delete*",
+          "kms:ScheduleKeyDeletion"
+        ],
+        "Resource": "*",
+        "Condition": {
+          "ArnNotLike": {
+            "aws:PrincipalARN": ${ACCEL_LOOKUP::CUSTOM:ALLOWED_PRINCIPAL_ARNS}
+          }
+        }
+      },
+      {
+        "Sid": "RestrictEC2InstanceTypes",
+        "Effect": "Deny",
+        "Action": "ec2:RunInstances",
+        "Resource": "*",
+        "Condition": {
+          "ArnNotLike": {
+            "aws:PrincipalARN": ${ACCEL_LOOKUP::CUSTOM:ALLOWED_PRINCIPAL_ARNS}
+          },
+          "StringNotLike": {
+            "ec2:InstanceType": [
+              "t2.*",
+              "t3.*"
+            ]
+          }
+        }
+      },
+      {
+        "Sid": "WhitelistedAWSServices",
+        "Effect": "Deny",
+        "NotAction": [
+          "access-analyzer:*",
+          "account:*",
+          "acm:*",
+          "apigateway:*",
+          "apigateway-fips:*",
+          "cognito-idp:*",
+          "cognito-identity:*",
+          "autoscaling:*",
+          "backup:*",
+          "budgets:*",
+          "ce:*",
+          "cloudformation:*",
+          "cloudfront:*",
+          "cloudtrail:*",
+          "cloudwatch:*",
+          "codecommit:*",
+          "codebuild:*",
+          "codepipeline:*",
+          "config:*",
+          "dynamodb:*",
+          "ebs:*",
+          "ec2:*",
+          "ecr:*",
+          "ecs:*",
+          "efs:*",
+          "eks:*",
+          "elasticache:*",
+          "elasticloadbalancing:*",
+          "events:*",
+          "execute-api:*",
+          "guardduty:*",
+          "iam:*",
+          "kms:*",
+          "lambda:*",
+          "logs:*",
+          "macie2:*",
+          "network-firewall:*",
+          "ram:*",
+          "rds:*",
+          "route53:*",
+          "route53resolver:*",
+          "s3:*",
+          "secretsmanager:*",
+          "securityhub:*",
+          "servicecatalog:*",
+          "servicequotas:*",
+          "sns:*",
+          "sqs:*",
+          "ssm:*",
+          "ssm-guiconnect:*",
+          "ssmmessages:*",
+          "sso:*",
+          "identitystore:*",
+          "states:*",
+          "sts:*",
+          "support:*",
+          "trustedadvisor:*"
+        ],
+        "Resource": "*",
+        "Condition": {
+          "ArnNotLike": {
+            "aws:PrincipalARN": ${ACCEL_LOOKUP::CUSTOM:ALLOWED_PRINCIPAL_ARNS}
+          }
+        }
+      }
+    ]
+  }

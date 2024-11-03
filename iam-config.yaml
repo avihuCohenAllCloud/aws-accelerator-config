@@ -1,0 +1,73 @@
+#--------------------------------------------------------------------------------------#
+# AllCloud AWS LZA configuration for Traditional SMB
+#
+# This file contains the Identity Access Managment definition for the AWS LZA configuration
+# The solution is deploying the default permission sets and role set that needed for minimal operations
+# It is recommanded that user and group will be sync from the organization user directory, the solution assume that user and groups already exists.
+# plese refer to https://allcloud.atlassian.net/wiki/x/AYDKhwE for more details
+# ------------------------------------------------------------------------------------#
+identityCenter:
+  name: identityCenter
+  identityCenterPermissionSets:
+    #This user has full access and can delegate permissions to every service and resource in AWS.
+    - name: Admin
+      policies:
+        awsManaged:
+          - arn:aws:iam::aws:policy/AdministratorAccess
+        customerManaged: []
+      sessionDuration: 60
+
+    #This user has access to view billing information.
+    - name: Billing
+      policies:
+        awsManaged:
+          -  arn:aws:iam::aws:policy/job-function/Billing
+        customerManaged: []
+      sessionDuration: 60
+    # This user performs application development tasks and can create and configure resources and services that support AWS aware application development.
+    - name: Developer
+      policies:
+        awsManaged:
+          - arn:aws:iam::aws:policy/PowerUserAccess
+        customerManaged: []
+      sessionDuration: 60
+    # This user has read-only access to AWS resources.
+    - name: Readonly
+      policies:
+        awsManaged:
+          - arn:aws:iam::aws:policy/job-function/ViewOnlyAccess
+        customerManaged: []
+      sessionDuration: 60
+    # This user has access to security audit tasks.
+    - name: SecurityAudit
+      policies:
+        awsManaged:
+          - arn:aws:iam::aws:policy/SecurityAudit
+        customerManaged: []
+      sessionDuration: 60
+    # This user has access to network administration tasks.
+    - name: Network-Admins
+      policies:
+        awsManaged:
+          - arn:aws:iam::aws:policy/job-function/NetworkAdministrator
+        customerManaged: []
+      sessionDuration: 60
+policySets: []
+roleSets:
+  - deploymentTargets:
+      organizationalUnits:
+        - Root
+    roles:
+      # This role is utilized by the Backup Plans defined in global-config.yaml
+      # We create this role in every account where we plan to have Backup Plans
+      # and Backup Vaults
+      - name: LZA-Backup-Role
+        assumedBy:
+          - type: service
+            principal: backup.amazonaws.com
+        policies:
+          awsManaged:
+            - service-role/AWSBackupServiceRolePolicyForBackup
+            - service-role/AWSBackupServiceRolePolicyForRestores
+groupSets: []
+userSets: []

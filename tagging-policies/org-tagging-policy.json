@@ -1,0 +1,115 @@
+{
+  "tags": {
+      "Owner": {
+          "tag_key": {
+              "@@assign": "Owner"
+          }
+        },
+      "BudgetCode": {
+          "tag_key": {
+              "@@assign": "BudgetCode"
+          }
+        },
+      "Department": {
+          "tag_key": {
+              "@@assign": "Department"
+          },
+          "tag_value": {
+            "@@assign": [
+              "IT",
+              "HR",
+              "Finance",
+              "Managment",
+              "Marketing",
+              "Operations",
+              "RND"
+            ]
+          }  
+        },
+      "Environment": {
+          "tag_key": {
+              "@@assign": "Environment"
+          },
+          "tag_value": {
+            "@@assign": [
+              "Development",
+              "Testing",
+              "Production",
+              "Staging"
+              ]
+          }  
+        },
+      "Project": {
+          "tag_key": {
+              "@@assign": "Project"
+          }
+        },
+      "Team": {
+          "tag_key": {
+              "@@assign": "Team"
+          }
+        },
+      "ApplicationName": {
+          "tag_key": {
+              "@@assign": "ApplicationName"
+          }
+        },
+      "ApplicationVersion": {
+          "tag_key": {
+              "@@assign": "ApplicationVersion"
+          }
+        },
+      "DataClassification": {
+          "tag_key": {
+              "@@assign": "DataClassification"
+          },
+          "tag_value": {
+            "@@assign": [
+              "secret",
+              "sensitive",
+              "public"
+              ]
+          }  
+        },
+      "AutoStopStart": {
+          "tag_key": {
+              "@@assign": "AutoStopStart"
+          },
+          "tag_value": {
+            "@@assign": [
+              "true",
+              "false"
+            ]
+          }  
+        },
+      "UptimeSchedule": {
+          "tag_key": {
+              "@@assign": "UptimeSchedule"
+          },
+          "tag_value": {
+            "@@assign": [
+              "office-hours",
+              "running",
+              "stopping"
+              ]
+          }  
+        },
+      "BackupPolicyName": {
+          "tag_key": {
+              "@@assign": "BackupPolicyName"
+          },
+          "tag_value": {
+            "@@assign": [
+              "Daily",
+              "Weekly",
+              "Mothly"
+              ]
+          }  
+        },
+      "map-migrated": {
+          "tag_key": {
+              "@@assign": "map-migrated"
+          }
+        }
+  }
+}

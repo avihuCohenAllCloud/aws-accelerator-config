@@ -1,0 +1,238 @@
+
+###################################################################################
+# For additional configurable services, features, and property descriptions,      #
+# please review our network configuration reference in our README.md:             #
+# https://github.com/awslabs/landing-zone-accelerator-on-aws/blob/main/README.md  #
+###################################################################################
+homeRegion: &HOME_REGION eu-west-1
+#####################################
+# Delete default VPCs-- use this    #
+# object to delete default VPCs in  #
+# any non-excluded accounts         #
+#####################################
+defaultVpc:
+  delete: true
+  excludeAccounts: []
+
+centralNetworkServices:
+  delegatedAdminAccount: Network
+  ipams:
+    - name: LZA-ipam
+      region: *HOME_REGION
+      description: Accelerator IPAM
+      operatingRegions:
+        - *HOME_REGION
+      pools:
+        - name: lza-base-pool
+          description: Base Pool Ip Adress
+          provisionedCidrs:
+            - {{R_BASE_POOL_CIDR}}
+        - name: lza-core-network-pool
+          description: Core network pool
+          locale: *HOME_REGION
+          provisionedCidrs:
+            - {{R_CORE_POOL_CIDR}}
+
+
+
+endpointPolicies:
+  - name: Default
+    document: vpc-endpoint-policies/default.json
+  - name: Ec2
+    document: vpc-endpoint-policies/ec2.json
+
+#####################################
+# Transit Gateways-- use this object #
+# to deploy transit gateways         #
+#####################################
+
+transitGateways:
+  - name: lza-Core-Network
+    account: Network
+    region: *HOME_REGION
+    shareTargets:
+      organizationalUnits:
+        - Shared-Services
+        - Non-Production
+        - Production
+    asn: 65521
+    dnsSupport: enable
+    vpnEcmpSupport: enable
+    defaultRouteTableAssociation: disable
+    defaultRouteTablePropagation: disable
+    autoAcceptSharingAttachments: enable
+    routeTables:
+      - name: Network-Main-Core
+        routes: []
+      - name: Core-Network-Internet
+        routes:
+          - destinationCidrBlock: 0.0.0.0/0
+            attachment:
+              vpcName: LZA-Egress-VPC
+              account: Network
+####################################
+# VPCs-- use this object to deploy  #
+# a VPC in a single account and     #
+# region.                           #
+#####################################
+
+vpcs:
+  - name: LZA-Egress-VPC
+    account: Network
+    region: *HOME_REGION
+    ipamAllocations:
+      - ipamPoolName: lza-core-network-pool
+        netmaskLength: 22
+    internetGateway: true
+    natGateways:
+      - name: nat-a
+        subnet: Network-EgressPublic-A
+      - name: nat-b
+        subnet: Network-EgressPublic-B
+    routeTables:
+      - name: Network-Egress-Public-Tgw-A
+        routes:
+          - name: TgwRouteCore
+            destination: 192.168.0.0/18
+            type: transitGateway
+            target: lza-Core-Network
+          - name: TgwRoute
+            destination: 10.0.0.0/8
+            type: transitGateway
+            target: lza-Core-Network
+          - name: Internet
+            destination: 0.0.0.0/0
+            type: internetGateway
+      - name: Network-Egress-Public-Tgw-B
+        routes:
+          - name: TgwRouteCore
+            destination: 192.168.0.0/16
+            type: transitGateway
+            target: lza-Core-Network
+          - name: TgwRoute
+            destination: 10.0.0.0/8
+            type: transitGateway
+            target: lza-Core-Network
+          - name: Internet
+            destination: 0.0.0.0/0
+            type: internetGateway
+      - name: Network-Egress-Nat-A
+        routes:
+          - name: NatRoute
+            destination: 0.0.0.0/0
+            type: natGateway
+            target: nat-a
+      - name: Network-Egress-Nat-B
+        routes:
+          - name: NatRoute
+            destination: 0.0.0.0/0
+            type: natGateway
+            target: nat-b
+    subnets:
+      - name: Network-EgressTgw-A
+        availabilityZone: a
+        routeTable: Network-Egress-Nat-A
+        ipamAllocation:
+          ipamPoolName: lza-core-network-pool
+          netmaskLength: 28
+      - name: Network-EgressTgw-B
+        availabilityZone: b
+        routeTable: Network-Egress-Nat-B
+        ipamAllocation:
+          ipamPoolName: lza-core-network-pool
+          netmaskLength: 28
+      - name: Network-EgressPublic-A
+        availabilityZone: a
+        routeTable: Network-Egress-Public-Tgw-A
+        ipamAllocation:
+          ipamPoolName: lza-core-network-pool
+          netmaskLength: 24
+      - name: Network-EgressPublic-B
+        availabilityZone: b
+        routeTable: Network-Egress-Public-Tgw-B
+        ipamAllocation:
+          ipamPoolName: lza-core-network-pool
+          netmaskLength: 24 
+    transitGatewayAttachments:
+      - name: Network-Egress
+        transitGateway:
+          name: lza-Core-Network
+          account: Network
+        routeTableAssociations:
+          - Core-Network-Internet
+        routeTablePropagations: []
+        subnets:
+          - Network-EgressTgw-A
+          - Network-EgressTgw-B
+
+
+vpcTemplates:
+  - name: Workload
+    region: *HOME_REGION
+    deploymentTargets:
+      organizationalUnits:
+        - Shared-Services
+        - Non-Production
+        - Production
+        - Infrastructure
+    ipamAllocations:
+      - ipamPoolName: lza-base-pool
+        netmaskLength: 23
+    internetGateway: false
+    enableDnsHostnames: true
+    enableDnsSupport: true
+    instanceTenancy: default
+    routeTables:
+      - name: Accelerator-Template-A
+        routes: []
+      - name: Accelerator-Template-B
+        routes: []
+      - name: Accelerator-Template-TGW-A
+        routes:
+          - name: TgwRoute
+            destination: 0.0.0.0/0
+            type: transitGateway
+            target: lza-Core-Network
+      - name: Accelerator-Template-TGW-B
+        routes:
+          - name: TgwRoute
+            destination: 0.0.0.0/0
+            type: transitGateway
+            target: lza-Core-Network
+    subnets:
+      - name: Accelerator-Template-A
+        availabilityZone: a
+        routeTable: Accelerator-Template-A
+        ipamAllocation:
+          ipamPoolName: lza-base-pool
+          netmaskLength: 25
+      - name: Accelerator-Template-B
+        availabilityZone: b
+        routeTable: Accelerator-Template-B
+        ipamAllocation:
+          ipamPoolName: lza-base-pool
+          netmaskLength: 25
+      - name: Accelerator-TemplateTgwAttach-A
+        availabilityZone: a
+        routeTable: Accelerator-Template-TGW-A
+        ipamAllocation:
+          ipamPoolName: lza-base-pool
+          netmaskLength: 25
+      - name: Accelerator-TemplateTgwAttach-B
+        availabilityZone: b
+        routeTable: Accelerator-Template-TGW-B
+        ipamAllocation:
+          ipamPoolName: lza-base-pool
+          netmaskLength: 25
+    transitGatewayAttachments:
+      - name: Accelerator-Template-TGW
+        transitGateway:
+          name: lza-Core-Network
+          account: Network
+        routeTableAssociations:
+          - Core-Network-Internet
+        routeTablePropagations:
+          - Network-Main-Core
+        subnets:
+          - Accelerator-TemplateTgwAttach-A
+          - Accelerator-TemplateTgwAttach-B

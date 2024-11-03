@@ -1,0 +1,193 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "DenyLeaveOrganization",
+        "Effect": "Deny",
+        "Action": "organizations:LeaveOrganization",
+        "Resource": "*",
+        "Condition": {
+          "ArnNotLike": {
+            "aws:PrincipalARN": ${ACCEL_LOOKUP::CUSTOM:ALLOWED_PRINCIPAL_ARNS}
+          }
+        }
+      },
+      {
+        "Sid": "ServiceGuardrails",
+        "Effect": "Deny",
+        "Action": [
+          "s3:PutAccountPublicAccessBlock",
+          "securityhub:EnableSecurityHub",
+          "securityhub:DeclineInvitations",
+          "securityhub:CreateMembers",
+          "securityhub:DisassociateMembers",
+          "securityhub:InviteMembers",
+          "securityhub:DeleteInvitations",
+          "securityhub:AcceptInvitation",
+          "securityhub:DisassociateFromMasterAccount",
+          "securityhub:DeleteMembers",
+          "securityhub:DisableSecurityHub",
+          "access-analyzer:CreateAnalyzer",
+          "access-analyzer:DeleteAnalyzer",
+          "guardduty:StartMonitoringMembers",
+          "guardduty:StopMonitoringMembers",
+          "guardduty:DisassociateMembers",
+          "guardduty:DeleteDetector",
+          "guardduty:UpdateDetector",
+          "guardduty:CreateMembers",
+          "guardduty:DeleteMembers",
+          "macie2:Disassociate*",
+          "macie2:Create*",
+          "macie2:Disable*",
+          "macie2:Enable*",
+          "macie2:Update*",
+          "macie2:PutClassificationExportConfiguration",
+          "macie2:Delete*",
+          "macie2:Decline*",
+          "guardduty:CreateDetector",
+          "config:Delete*",
+          "config:Stop*",
+          "cloudtrail:StopLogging",
+          "cloudtrail:UpdateTrail",
+          "cloudtrail:DeleteTrail",
+          "ec2:DisableEbsEncryptionByDefault"
+        ],
+        "Resource": "*",
+        "Condition": {
+          "ArnNotLike": {
+            "aws:PrincipalARN": ${ACCEL_LOOKUP::CUSTOM:ALLOWED_PRINCIPAL_ARNS}
+          }
+        }
+      },
+      {
+        "Sid": "Ec2AmiOwner",
+        "Effect": "Deny",
+        "Action": [
+          "ec2:RunInstances",
+          "ec2:RunScheduledInstances"
+        ],
+        "Resource": "arn:aws:ec2:*::image/ami-*",
+        "Condition": {
+          "StringNotEquals": {
+            "ec2:Owner": [
+              "${aws:PrincipalAccount}",
+              "amazon"
+            ]
+          },
+          "ArnNotLike": {
+            "aws:PrincipalARN": ${ACCEL_LOOKUP::CUSTOM:ALLOWED_PRINCIPAL_ARNS}
+          }
+        }
+      },
+      {
+        "Sid": "RequireIMDSv2",
+        "Effect": "Deny",
+        "Action": [
+          "ec2:RunInstances",
+          "ec2:ModifyInstanceMetadataOptions"
+        ],
+        "Resource": "*",
+        "Condition": {
+          "StringNotEquals": {
+            "ec2:MetadataHttpTokens": "required"
+          },
+          "ArnNotLike": {
+            "aws:PrincipalARN": ${ACCEL_LOOKUP::CUSTOM:ALLOWED_PRINCIPAL_ARNS}
+          }
+        }
+      },
+      {
+        "Sid": "EnforceLambdaInsideVPC",
+        "Effect": "Deny",
+        "Action": [
+          "lambda:CreateFunction",
+          "lambda:UpdateFunctionConfiguration"
+        ],
+        "Resource": [
+          "*"
+        ],
+        "Condition": {
+          "ArnNotLike": {
+            "aws:PrincipalARN": ${ACCEL_LOOKUP::CUSTOM:ALLOWED_PRINCIPAL_ARNS}
+          },
+          "StringNotLike": {
+            "lambda:VpcIds": [
+              "*"
+            ]
+          }
+        }
+      },
+      {
+        "Sid": "LimitRegionAccess",
+        "Effect": "Deny",
+        "Action": "*",
+        "Resource": "*",
+        "Condition": {
+          "StringNotEquals": {
+            "aws:RequestedRegion": ${ACCEL_LOOKUP::CUSTOM:ALLOWED_REGIONS}
+          },
+          "ArnNotLike": {
+            "aws:PrincipalARN": ${ACCEL_LOOKUP::CUSTOM:ALLOWED_PRINCIPAL_ARNS}
+          }
+        }
+      },
+      {
+        "Sid": "DenyAccessKeyCreation",
+        "Effect": "Deny",
+        "Action": [
+          "iam:CreateAccessKey",
+          "iam:UpdateAccessKey",
+          "iam:CreateUser"
+        ],
+        "Resource": "*",
+        "Condition": {
+          "ArnNotLike": {
+            "aws:PrincipalARN": ${ACCEL_LOOKUP::CUSTOM:ALLOWED_PRINCIPAL_ARNS}
+          }
+        }
+      },
+      {
+        "Sid": "DisableRootUser",
+        "Effect": "Deny",
+        "NotAction": [
+          "support:*",
+          "organizations:*",
+          "account:*",
+          "billing:*",
+          "ce:*",
+          "consolidatedbilling:*",
+          "cur:*",
+          "freetier:*",
+          "invoicing:*",
+          "payments:*",
+          "tax:*",
+          "ecs:PutAccountSettingDefault",
+          "ecs:DeleteAccountSetting",
+          "ecs:PutAccountSetting",
+          "ecs:List*",
+          "ecs:Get*",
+          "s3:PutBucketVersioning",
+          "s3:List*",
+          "s3:Get*",
+          "iam:UpdateLoginProfile",
+          "iam:DeactivateMFADevice",
+          "iam:DeleteVirtualMFADevice",
+          "iam:EnableMFADevice",
+          "iam:CreateVirtualMFADevice",
+          "iam:ChangePassword",
+          "iam:List*",
+          "iam:Get*"
+        ],
+        "Resource": [
+          "*"
+        ],
+        "Condition": {
+          "StringLike": {
+            "aws:PrincipalArn": [
+              "arn:aws:iam::*:root"
+            ]
+          }
+        }
+      }
+    ]
+  }

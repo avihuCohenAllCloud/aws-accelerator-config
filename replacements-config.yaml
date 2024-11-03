@@ -1,0 +1,35 @@
+#--------------------------------------------------------------------------------------#
+# AllCloud AWS LZA configuration for Traditional SMB
+#
+# This file contains all replacment definition for the AWS LZA configuration
+# plese refer to https://allcloud.atlassian.net/wiki/x/AYDKhwE for more details
+# ------------------------------------------------------------------------------------#
+globalReplacements:
+
+# ------------------------- CHANGE THE VALUES BELOW ACCORDING TO THE ORGANIZATION NEEDS ---------#
+
+  - key: R_BASE_POOL_CIDR
+    type: String
+    value: 10.0.0.0/8
+
+  - key: R_CORE_POOL_CIDR
+    type: String
+    value: 192.168.0.0/18
+# --------------------------- NO NEED TO CHANGE BELOW THIS LINE ----------------------#
+  - key: NO_SANDBOX_OUS
+    type: StringList
+    value:
+      - Security
+      - Network
+      - Shared Services
+      - Production
+      - Non-Production
+  - key: ALLOWED_PRINCIPAL_ARNS
+    type: StringList
+    value:
+      - arn:aws:iam::*:role/${MANAGEMENT_ACCOUNT_ACCESS_ROLE}
+      - arn:aws:iam::*:role/AWSAccelerator*
+      - arn:aws:iam::*:role/${MANAGEMENT_ACCOUNT_ACCESS_ROLE}*
+      - arn:${PARTITION}:iam::*:role/cdk-accel-*
+      - arn:aws:iam::*:role/OrganizationAccountAccessRole
+      - arn:aws:iam::*:role/OrganizationAccountAccessRole*

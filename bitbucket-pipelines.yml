@@ -1,0 +1,22 @@
+image: atlassian/default-image:2
+#Uploading and zip to the S3 bucket#
+pipelines:
+  default:
+    - step:
+        name: LZA-Training
+        script:
+          - mkdir artifact
+          - zip -r artifact/aws-accelerator-config.zip ./* -x "*bitbucket-pipelines.yml" "*artifact/*" "contributors.txt"
+        artifacts:
+          - artifact/*
+    - step:
+        name: Deploy to S3
+        deployment: production
+        script:
+          - pipe: atlassian/aws-s3-deploy:0.3.8
+            variables:
+              AWS_ACCESS_KEY_ID: $AWS_ACCESS
+              AWS_SECRET_ACCESS_KEY: $AWS_SECRET
+              AWS_DEFAULT_REGION: $AWS_REGION
+              S3_BUCKET: '$AWS_BUCKET_NAME/zipped'
+              LOCAL_PATH: 'artifact'

@@ -1,0 +1,57 @@
+#--------------------------------------------------------------------------------------#
+# AllCloud AWS LZA configuration for Traditional SMB
+#
+# This file contains Organization configuration, it contains the organizational strcture and organization policies
+# plese refer to https://allcloud.atlassian.net/wiki/x/AYDKhwE for more details
+# ------------------------------------------------------------------------------------#
+enable: true
+organizationalUnits:
+  - name: Security
+  - name: Network
+  - name: Shared-Services
+  - name: Non-Production
+  - name: Production
+  - name: Sandbox
+  - name: Infrastructure
+serviceControlPolicies:
+# Enforce Bucket encription to Workload accounts
+  - name: S3BucketEncryption
+    description: >
+      Enables encryption on S3 Bucket
+    policy: service-control-policies/s3-bucket-encryption.json
+    type: customerManaged
+    deploymentTargets:
+      organizationalUnits:
+        - Production
+        - Non-Production
+# General Organizational SCPs
+  - name: General
+    description: >
+      Deny Leave Organization, Require the usage of IMDSv2 only. and Limit access to specific regions
+    policy: service-control-policies/general_scp.json
+    type: customerManaged
+    deploymentTargets:
+      organizationalUnits:
+        - Root    
+  - name: Snadbox_SCPs
+    description: >
+      whitelist aws services
+    policy: service-control-policies/sandbox_scp.json
+    type: customerManaged
+    deploymentTargets:
+      organizationalUnits:
+        - Sandbox
+taggingPolicies:
+  - name: AllCloudTraditionalSMBTags
+    description: AllCLoud TraditionalSMB Organization Tagging Policy
+    policy: tagging-policies/org-tagging-policy.json
+    deploymentTargets:
+      organizationalUnits:
+        - Root
+backupPolicies:
+  - name: BackupPolicy
+    description: Organization-wide backup policy
+    policy: backup-policies/org-backup-policy.json
+    deploymentTargets:
+      organizationalUnits:
+        - Root

@@ -1,0 +1,35 @@
+#--------------------------------------------------------------------------------------#
+# AllCloud AWS LZA configuration for Traditional SMB
+#
+# This file contains the accounts definition for the AWS LZA configuration
+# The networking resources in this solution will be deployed to the Network account, please make sure it is exists.
+# plese refer to https://allcloud.atlassian.net/wiki/x/AYDKhwE for more details
+# ------------------------------------------------------------------------------------#
+mandatoryAccounts:
+  # We recommend you do not change mandatory account names. These are used within Landing Zone Accelerator to reference the accounts from other config files.
+  # The "name" value does not currently support spaces
+  # The "name" value DOES NOT need to match the account name
+  - name: Management
+    description: The management (primary) account. Do not change the name field for this mandatory account. Note, the account name key does not need to match the AWS account name.
+    email: AllCloud-Sandbox-Payer-98@allcloud.io
+    organizationalUnit: Root
+  - name: LogArchive
+    description: The log archive account. Do not change the name field for this mandatory account. Note, the account name key does not need to match the AWS account name.
+    email: avihu.cohen+logtsmb@allcloud.io
+    organizationalUnit: Security
+  - name: Audit
+    description: The security audit account (also referred to as the audit account). Do not change the name field for this mandatory account. Note, the account name key does not need to match the AWS account name.
+    email: avihu.cohen+audittsmb@allcloud.io
+    organizationalUnit: Security
+workloadAccounts:
+  # This account holds all services that need to be shared among all workloads
+  - name: SharedServices
+    description: The SharedServices account
+    email: avihu.cohen+sharedtsmb@allcloud.io
+    organizationalUnit: Shared-Services
+  # This account will manage the network resources for the organization  
+  - name: Network
+    description: The Network account
+    email: avihu.cohen+netsmb@allcloud.io
+    organizationalUnit: Network
+    
