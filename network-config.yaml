@@ -99,8 +99,7 @@ vpcTemplates:
         subnets:
           - DMZ-Private-A
           - DMZ-Private-B
-        account: Network
-        region: *HOME_REGION
+      - account: Network
     natGateways:
       - name: nat-a
         subnet: DMZ-Public-A
@@ -186,8 +185,7 @@ vpcTemplates:
         subnets:
           - Workload-Private-A
           - Workload-Private-B
-        account: Network
-        region: *HOME_REGION
+      - account: Network
     routeTables:
       - name: Workload-Private-A
         routes:
