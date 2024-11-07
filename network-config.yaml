@@ -224,7 +224,6 @@ vpcs:
     template: workload-dmz-template
     region: *HOME_REGION
     deploymentTargets:
-    deploymentTargets:
       organizationalUnits:
         - Production
         - Non-Production
