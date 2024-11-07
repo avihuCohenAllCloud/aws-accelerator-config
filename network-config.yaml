@@ -76,7 +76,147 @@ transitGateways:
 # region.                           #
 #####################################
 
+vpcTemplates:
+  - name: workload-dmz-template
+    deploymentTargets:
+      organizationalUnits:
+        - Production
+        - Non-Production
+        - Shared-Services
+    region: *HOME_REGION
+    ipamAllocations:
+      - ipamPoolName: lza-base-pool
+        netmaskLength: 22
+    internetGateway: true
+    transitGatewayAttachments:
+      - name: lza-core-network
+        transitGateway: 
+          name: lza-core-network
+        routeTableAssociations:
+          - lza-core-network-main
+        routeTablePropagations:
+          - lza-core-network-main
+    natGateways:
+      - name: nat-a
+        subnet: DMZ-Public-A
+      - name: nat-b
+        subnet: DMZ-Public-B
+    routeTables:
+      - name: DMZ-Public-A
+        routes:
+          - name: Internet
+            destination: 0.0.0.0/0
+            type: internetGateway
+      - name: DMZ-Public-B
+        routes:
+          - name: Internet
+            destination: 0.0.0.0/0
+            type: internetGateway
+      - name: DMZ-Private-A
+        routes:
+          - name: NatRoute
+            destination: 0.0.0.0/0
+            type: natGateway
+            target: nat-a
+          - name: CoreNetworkRoute
+            destination: 10.0.0.0/8
+            type: transitGateway
+            target: lza-core-network
+      - name: DMZ-Private-B
+        routes:
+          - name: NatRoute
+            destination: 0.0.0.0/0
+            type: natGateway
+            target: nat-b
+          - name: CoreNetworkRoute
+            destination: 10.0.0.0/8
+            type: transitGateway
+            target: lza-core-network
+    subnets:
+      - name: DMZ-Public-A
+        availabilityZone: a
+        routeTable: DMZ-Public-A
+        ipamAllocation:
+          ipamPoolName: lza-base-pool
+          netmaskLength: 24
+      - name: DMZ-Public-B
+        availabilityZone: b
+        routeTable: DMZ-Public-B
+        ipamAllocation:
+          ipamPoolName: lza-base-pool
+          netmaskLength: 24
+      - name: DMZ-Private-A
+        availabilityZone: a
+        routeTable: DMZ-Private-A
+        ipamAllocation:
+          ipamPoolName: lza-base-pool
+          netmaskLength: 24
+      - name: DMZ-Private-B
+        availabilityZone: b
+        routeTable: DMZ-Private-B
+        ipamAllocation:
+          ipamPoolName: lza-base-pool
+          netmaskLength: 24
+
+  # New workload template with only private subnets
+  - name: workload
+    deploymentTargets:
+      organizationalUnits:
+        - Production
+        - Non-Production
+        - Shared-Services
+    region: *HOME_REGION
+    ipamAllocations:
+      - ipamPoolName: lza-base-pool
+        netmaskLength: 22
+    internetGateway: false
+    transitGatewayAttachments:
+      - name: lza-core-network
+        transitGateway: 
+          name: lza-core-network
+        routeTableAssociations:
+          - lza-core-network-main
+        routeTablePropagations:
+          - lza-core-network-main
+    routeTables:
+      - name: Workload-Private-A
+        routes:
+          - name: CoreNetworkRoute
+            destination: 10.0.0.0/8
+            type: transitGateway
+            target: lza-core-network
+      - name: Workload-Private-B
+        routes:
+          - name: CoreNetworkRoute
+            destination: 10.0.0.0/8
+            type: transitGateway
+            target: lza-core-network
+    subnets:
+      - name: Workload-Private-A
+        availabilityZone: a
+        routeTable: Workload-Private-A
+        ipamAllocation:
+          ipamPoolName: lza-base-pool
+          netmaskLength: 24
+      - name: Workload-Private-B
+        availabilityZone: b
+        routeTable: Workload-Private-B
+        ipamAllocation:
+          ipamPoolName: lza-base-pool
+          netmaskLength: 24
+
+
+
+
+
 vpcs:
+  - name: workload-dmz
+    template: workload-dmz-template
+
+  - name: workload-private
+    template: workload
+
+ #Egress-VPC   
   - name: LZA-Egress-VPC
     account: Network
     region: *HOME_REGION
