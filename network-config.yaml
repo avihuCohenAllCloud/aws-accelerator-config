@@ -220,22 +220,22 @@ vpcTemplates:
 
 
 vpcs:
-  - name: workload-dmz
-    template: workload-dmz-template
-    region: *HOME_REGION
-    deploymentTargets:
-      organizationalUnits:
-        - Production
-        - Non-Production
-        - Shared-Services
+#  - name: workload-dmz
+#    template: workload-dmz-template
+#    region: *HOME_REGION
+#    deploymentTargets:
+#      organizationalUnits:
+#        - Production
+#        - Non-Production
+#        - Shared-Services
 
-  - name: workload-private
-    template: workload
-    deploymentTargets:
-      organizationalUnits:
-        - Production
-        - Non-Production
-        - Shared-Services
+#  - name: workload-private
+#    template: workload
+#    deploymentTargets:
+#      organizationalUnits:
+#        - Production
+#        - Non-Production
+#        - Shared-Services
 
  #Egress-VPC   
   - name: LZA-Egress-VPC
