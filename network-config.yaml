@@ -96,6 +96,9 @@ vpcTemplates:
           - lza-core-network-main
         routeTablePropagations:
           - lza-core-network-main
+        subnets:
+          - DMZ-Private-A
+          - DMZ-Private-B
     natGateways:
       - name: nat-a
         subnet: DMZ-Public-A
@@ -178,6 +181,9 @@ vpcTemplates:
           - lza-core-network-main
         routeTablePropagations:
           - lza-core-network-main
+        subnets:
+          - Workload-Private-A
+          - Workload-Private-B
     routeTables:
       - name: Workload-Private-A
         routes:
