@@ -314,5 +314,8 @@ vpcs:
         subnets:
           - Network-EgressTgw-A
           - Network-EgressTgw-B
+        account: Network
+        region: *HOME_REGION
+
 
 
