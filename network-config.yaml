@@ -152,7 +152,7 @@ vpcTemplates:
     transitGatewayAttachments:
       - name: lza-core-network
         transitGateway: 
-          name: lza-core-network
+          name: lza-Core-Network
           account: Network
         routeTableAssociations:
           - Network-Main-Core
@@ -204,7 +204,7 @@ vpcTemplates:
     transitGatewayAttachments:
       - name: lza-core-network
         transitGateway: 
-          name: lza-core-network
+          name: lza-Core-Network
           account: Network
         routeTableAssociations:
           - Network-Main-Core
