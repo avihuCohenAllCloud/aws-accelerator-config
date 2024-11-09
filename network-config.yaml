@@ -113,7 +113,7 @@ vpcTemplates:
           - name: CoreNetworkRoute
             destination: 10.0.0.0/8
             type: transitGateway
-            target: lza-core-network
+            target: lza-Core-Network
       - name: DMZ-Private-B
         routes:
           - name: NatRoute
@@ -123,7 +123,7 @@ vpcTemplates:
           - name: CoreNetworkRoute
             destination: 10.0.0.0/8
             type: transitGateway
-            target: lza-core-network
+            target: lza-Core-Network
     subnets:
       - name: DMZ-Public-A
         availabilityZone: a
@@ -181,13 +181,13 @@ vpcTemplates:
           - name: CoreNetworkRoute
             destination: 10.0.0.0/8
             type: transitGateway
-            target: lza-core-network
+            target: lza-Core-Network
       - name: Workload-Private-B
         routes:
           - name: CoreNetworkRoute
             destination: 10.0.0.0/8
             type: transitGateway
-            target: lza-core-network
+            target: lza-Core-Network
     subnets:
       - name: Workload-Private-A
         availabilityZone: a
