@@ -92,6 +92,7 @@ vpcTemplates:
       - name: lza-core-network
         transitGateway: 
           name: lza-core-network
+          account: Network
         routeTableAssociations:
           - lza-core-network-main
         routeTablePropagations:
@@ -178,6 +179,7 @@ vpcTemplates:
       - name: lza-core-network
         transitGateway: 
           name: lza-core-network
+          account: Network
         routeTableAssociations:
           - lza-core-network-main
         routeTablePropagations:
@@ -218,24 +220,7 @@ vpcTemplates:
 
 
 vpcs:
-#  - name: workload-dmz
-#    template: workload-dmz-template
-#    region: *HOME_REGION
-#    deploymentTargets:
-#      organizationalUnits:
-#        - Production
-#        - Non-Production
-#        - Shared-Services
-
-#  - name: workload-private
-#    template: workload
-#    deploymentTargets:
-#      organizationalUnits:
-#        - Production
-#        - Non-Production
-#        - Shared-Services
-
- #Egress-VPC   
+Egress-VPC   
   - name: LZA-Egress-VPC
     account: Network
     region: *HOME_REGION
