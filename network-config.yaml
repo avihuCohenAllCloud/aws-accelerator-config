@@ -220,7 +220,7 @@ vpcTemplates:
 
 
 vpcs:
-Egress-VPC   
+#Egress-VPC   
   - name: LZA-Egress-VPC
     account: Network
     region: *HOME_REGION
