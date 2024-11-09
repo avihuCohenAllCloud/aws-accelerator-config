@@ -155,9 +155,9 @@ vpcTemplates:
           name: lza-core-network
           account: Network
         routeTableAssociations:
-          - lza-core-network-main
+          - Network-Main-Core
         routeTablePropagations:
-          - lza-core-network-main
+          - Network-Main-Core
         subnets:
           - DMZ-Private-A
           - DMZ-Private-B
@@ -207,9 +207,9 @@ vpcTemplates:
           name: lza-core-network
           account: Network
         routeTableAssociations:
-          - lza-core-network-main
+          - Network-Main-Core
         routeTablePropagations:
-          - lza-core-network-main
+          - Network-Main-Core
         subnets:
           - Workload-Private-A
           - Workload-Private-B
