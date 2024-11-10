@@ -111,7 +111,7 @@ vpcTemplates:
             type: natGateway
             target: nat-a
           - name: CoreNetworkRoute
-            destination: 10.0.0.0/8
+            destination: {{R_BASE_POOL_CIDR}}
             type: transitGateway
             target: lza-Core-Network
       - name: DMZ-Private-B
@@ -121,7 +121,7 @@ vpcTemplates:
             type: natGateway
             target: nat-b
           - name: CoreNetworkRoute
-            destination: 10.0.0.0/8
+            destination: {{R_BASE_POOL_CIDR}}
             type: transitGateway
             target: lza-Core-Network
     subnets:
@@ -179,13 +179,13 @@ vpcTemplates:
       - name: Workload-Private-A
         routes:
           - name: CoreNetworkRoute
-            destination: 10.0.0.0/8
+            destination: {{R_BASE_POOL_CIDR}}
             type: transitGateway
             target: lza-Core-Network
       - name: Workload-Private-B
         routes:
           - name: CoreNetworkRoute
-            destination: 10.0.0.0/8
+            destination: {{R_BASE_POOL_CIDR}}
             type: transitGateway
             target: lza-Core-Network
     subnets:
@@ -237,7 +237,7 @@ vpcs:
             type: transitGateway
             target: lza-Core-Network
           - name: TgwRoute
-            destination: 10.0.0.0/8
+            destination: {{R_BASE_POOL_CIDR}}
             type: transitGateway
             target: lza-Core-Network
           - name: Internet
@@ -250,7 +250,7 @@ vpcs:
             type: transitGateway
             target: lza-Core-Network
           - name: TgwRoute
-            destination: 10.0.0.0/8
+            destination: {{R_BASE_POOL_CIDR}}
             type: transitGateway
             target: lza-Core-Network
           - name: Internet
