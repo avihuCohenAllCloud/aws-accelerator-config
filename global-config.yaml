@@ -13,7 +13,7 @@ cloudwatchLogRetentionInDays: 3653
 cdkOptions:
   centralizeBuckets: true
   useManagementAccessRole: true
-terminationProtection: false ###NEED TO CHANGE BACK TO TRUE at the end of the deployment #######
+terminationProtection: true 
 controlTower:
   enable: true
   landingZone:
